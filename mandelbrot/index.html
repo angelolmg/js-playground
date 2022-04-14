@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <title>Mandelbrot Set</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+
+    <body>
+
+        <a href="javascript: void(0);">
+            <i id="mode_toggler" class="fa fa-moon-o fa-2x" onclick="toggle_pageMode()"></i>
+        </a>
+
+        <div class="center">
+            <canvas id="myCanvas" width="500" height="400">
+                Your browser does not support the canvas element.
+            </canvas>
+
+            <br><br>
+
+            <a href="javascript: void(0);"><i class="fa fa-search-plus fa-2x" onclick="zoom_in()"></i></a>
+
+            <input style="margin: 0px 30px;" type="range" id="max_iter" value="80" min="0" max="1000" oninput="update_maxiter()">
+            
+            <a href="javascript: void(0);"><i class="fa fa-search-minus fa-2x" onclick="zoom_out()"></i></a>
+        
+            <br><br>
+    
+            <a href="javascript: void(0);"><i class="fa fa-play-circle fa-2x" onclick="playAnimation()"></i></a>
+            <a href="javascript: void(0);"><i class="fa fa-pause fa-2x" style="margin: 0px 30px;" onclick="pauseAnimation()"></i></a>
+            <a href="javascript: void(0);"><i class="fa fa-refresh fa-2x" onclick="reloadAnimation()"></i></a>
+        </div>
+        
+        <script src="script.js"></script>
+
+    </body>
+    <footer>
+        <p class="center">
+            by Angelo Leite (2022)
+            <a href="https://github.com/angelolmg/js-playground" target="_blank">
+                <i style="color: gray;" class="fa fa-github"></i>
+            </a>
+        </p>
+    </footer>
+</html>
