@@ -1,4 +1,4 @@
-// Inspiraçõa: https://parametrichouse.com/fractal-tree1/
+// Inspiração: https://parametrichouse.com/fractal-tree1/
 // https://www.youtube.com/watch?v=0jjeOYMjmDU
 // TODO: MUDAR AS CORES PARA CADA NÍVEL DA ÁRVORE
 // TODO: MINI GUI PARA MUDAR VARIAVEIS
@@ -23,30 +23,28 @@ class Tree {
 
       if (!node.fully_grown) {
         if (
-          node.height <
-          MAX_BRANCH_HEIGHT * PROPORTIONAL_REDUCTION ** (node.level + 1)
+          node.length <
+          MAX_BRANCH_LENGTH * PROPORTIONAL_REDUCTION ** (node.level + 1)
         ) {
-          node.height += GROWTH_STEP;
+          node.length += GROWTH_STEP;
         } else {
           node.fully_grown = true;
 
           const anguloRadianos = node.alfa * (Math.PI / 180);
-          const new_x = node.x + Math.cos(anguloRadianos) * node.height;
-          const new_y = node.y - Math.sin(anguloRadianos) * node.height;
+          const new_x = node.x + Math.cos(anguloRadianos) * node.length;
+          const new_y = node.y - Math.sin(anguloRadianos) * node.length;
 
-          console.log(new_x, new_y);
-
-          if (node.level < MAX_LEVEL) {
+          if (node.level < MAX_LEVEL && node.length > MIN_BRANCH_LENGTH) {
             node.left_child = new TreeNode(
               new_x,
               new_y,
-              node.alfa + BRANCH_ANGLE,
+              node.alfa + LEFT_BRANCH_ANGLE,
               node.level + 1
             );
             node.right_child = new TreeNode(
               new_x,
               new_y,
-              node.alfa - BRANCH_ANGLE,
+              node.alfa - RIGHT_BRANCH_ANGLE,
               node.level + 1
             );
           }
@@ -68,8 +66,8 @@ class Tree {
       ctx.lineWidth = THICKNESS / (node.level + 1);
 
       const anguloRadianos = node.alfa * (Math.PI / 180);
-      const new_x = node.x + Math.cos(anguloRadianos) * node.height;
-      const new_y = node.y - Math.sin(anguloRadianos) * node.height;
+      const new_x = node.x + Math.cos(anguloRadianos) * node.length;
+      const new_y = node.y - Math.sin(anguloRadianos) * node.length;
 
       // Desenha a linha
       ctx.beginPath();
@@ -89,7 +87,7 @@ class TreeNode {
     this.y = y;
     this.alfa = alfa;
     this.level = level;
-    this.height = 0;
+    this.length = 0;
     this.fully_grown = false;
 
     this.left_child = null;
@@ -111,11 +109,14 @@ var WIDTH = canvas.width;
 var HEIGHT = canvas.height;
 
 var THICKNESS = 20;
-var MAX_LEVEL = 10;
+var MAX_LEVEL = 12;
 var GROWTH_STEP = 6;
 var BRANCH_ANGLE = 30;
-var MAX_BRANCH_HEIGHT = HEIGHT * 0.25;
-var PROPORTIONAL_REDUCTION = 0.75;
+var MAX_BRANCH_LENGTH = HEIGHT * 0.5;
+var MIN_BRANCH_LENGTH = 5;
+var PROPORTIONAL_REDUCTION = 0.65;
+var LEFT_BRANCH_ANGLE = 30;
+var RIGHT_BRANCH_ANGLE = 30;
 
 // Black and white (binary) or colored (colors)
 var colorMode = "binary";
