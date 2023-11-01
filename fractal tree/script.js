@@ -1,11 +1,10 @@
 // Inspiração: https://parametrichouse.com/fractal-tree1/
 // https://www.youtube.com/watch?v=0jjeOYMjmDU
-// TODO: MUDAR AS CORES PARA CADA NÍVEL DA ÁRVORE
-// TODO: MINI GUI PARA MUDAR VARIAVEIS
 
 class Tree {
   constructor(root_node) {
     this.root_node = root_node;
+    this.tree_fully_grown = false;
   }
 
   update_tree() {
@@ -13,7 +12,7 @@ class Tree {
   }
 
   update_recursively(node) {
-    if (node != null) {
+    if (node) {
       if (node.left_child) {
         this.update_recursively(node.left_child);
       }
@@ -47,6 +46,8 @@ class Tree {
               node.alfa - RIGHT_BRANCH_ANGLE,
               node.level + 1
             );
+          } else {
+            this.tree_fully_grown = true;
           }
         }
       }
@@ -58,9 +59,29 @@ class Tree {
   }
 
   draw_recursively(node) {
-    if (node != null) {
+    if (node) {
+      // Gradiente preto -> verde
+      const colors = [
+        "#000000",
+        "#000F00",
+        "#002200",
+        "#003400",
+        "#004600",
+        "#005500",
+        "#006500",
+        "#006F00",
+        "#008100",
+        "#009A00",
+        "#00B500",
+        "#00CB00",
+        "#00E300",
+        "#00F100",
+        "#00F500",
+        "#00FF00",
+      ];
+
       // Define a cor da linha
-      ctx.strokeStyle = "black";
+      ctx.strokeStyle = colors[node.level % colors.length];
 
       // Define a largura da linha
       ctx.lineWidth = THICKNESS / (node.level + 1);
@@ -96,10 +117,45 @@ class TreeNode {
 }
 
 function drawCanvas() {
-  my_tree.update_tree();
-  my_tree.draw_tree();
-
+  if (!my_tree.tree_fully_grown) {
+    my_tree.update_tree();
+    my_tree.draw_tree();
+  }
   requestAnimationFrame(drawCanvas);
+}
+
+function update(elementName) {
+  const input = document.querySelector(`#${elementName}_input`);
+  if (input) {
+    switch (elementName) {
+      case "tickness":
+        THICKNESS = parseInt(input.value);
+        break;
+      case "max_frac":
+        MAX_LEVEL = parseInt(input.value);
+        break;
+      case "growth":
+        GROWTH_STEP = parseInt(input.value);
+        break;
+      case "max_len":
+        MAX_BRANCH_LENGTH = parseInt(input.value);
+        break;
+      case "min_len":
+        MIN_BRANCH_LENGTH = parseInt(input.value);
+        break;
+      case "reduction":
+        PROPORTIONAL_REDUCTION = parseInt(input.value) / 100;
+        break;
+      case "left_angle":
+        LEFT_BRANCH_ANGLE = parseInt(input.value);
+        break;
+      case "right_angle":
+        RIGHT_BRANCH_ANGLE = parseInt(input.value);
+        break;
+      default:
+        break;
+    }
+  }
 }
 
 //Canvas configs
@@ -109,56 +165,45 @@ var WIDTH = canvas.width;
 var HEIGHT = canvas.height;
 
 var THICKNESS = 20;
-var MAX_LEVEL = 12;
+var MAX_LEVEL = 10;
 var GROWTH_STEP = 6;
-var BRANCH_ANGLE = 30;
 var MAX_BRANCH_LENGTH = HEIGHT * 0.5;
 var MIN_BRANCH_LENGTH = 5;
 var PROPORTIONAL_REDUCTION = 0.65;
 var LEFT_BRANCH_ANGLE = 30;
 var RIGHT_BRANCH_ANGLE = 30;
 
-// Black and white (binary) or colored (colors)
-var colorMode = "binary";
-//var colorMode = 'colors';
+setupElementValues();
 
-const root_node = new TreeNode(WIDTH / 2, HEIGHT, 90, 0);
-const my_tree = new Tree(root_node);
+var root_node = new TreeNode(WIDTH / 2, HEIGHT, 90, 0);
+var my_tree = new Tree(root_node);
 
 drawCanvas();
 
-function toggle_pageMode() {
-  if (colorMode == "binary") {
-    set_darkMode();
-  } else {
-    set_lightMode();
-  }
-
-  drawCanvas();
+function reload_tree() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  root_node = new TreeNode(WIDTH / 2, HEIGHT, 90, 0);
+  my_tree = new Tree(root_node);
 }
 
-function set_lightMode() {
-  var a = document.getElementsByTagName("a");
-  var handle = document.getElementById("mode_toggler");
+function setupElementValues() {
+  const elementNames = [
+    "tickness",
+    "max_frac",
+    "growth",
+    "max_len",
+    "min_len",
+    "reduction",
+    "left_angle",
+    "right_angle",
+  ];
+  elementNames.forEach((elementName) => {
+    const input = document.querySelector(`#${elementName}_input`);
+    const value = document.querySelector(`#${elementName}_val`);
 
-  document.body.classList.remove("dark");
-  for (var i = 0; i < a.length; i++) a[i].classList.remove("dark-icon");
-
-  handle.classList.remove("fa-sun-o");
-  handle.classList.add("fa-moon-o");
-
-  colorMode = "binary";
-}
-
-function set_darkMode(a, handle) {
-  var a = document.getElementsByTagName("a");
-  var handle = document.getElementById("mode_toggler");
-
-  document.body.classList.add("dark");
-  for (var i = 0; i < a.length; i++) a[i].classList.add("dark-icon");
-
-  handle.classList.remove("fa-moon-o");
-  handle.classList.add("fa-sun-o");
-
-  colorMode = "colors";
+    if (input && value) {
+      value.textContent = input.value;
+      input.addEventListener("input", () => (value.textContent = input.value));
+    }
+  });
 }
