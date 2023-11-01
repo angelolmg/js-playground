@@ -1,3 +1,22 @@
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    justify-content: space-evenly;
+
+    .main-window {
+        display: flex;
+        justify-content: space-evenly;
+    }
+    
+    .options {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
 .dark {
     background-color: black;
     color: white;

@@ -8,26 +8,41 @@
     </head>
 
     <body>
+        <div class="main-window">
+            <div class="options">
+                <a href="javascript: void(0);">
+                    <i id="mode_toggler" class="fa fa-moon-o fa-2x" onclick="toggle_pageMode()"></i>
+                </a>
+                <a href="javascript: void(0);"><i class="fa fa-search-plus fa-2x" onclick="zoom_in()"></i></a>
 
-        <a href="javascript: void(0);">
-            <i id="mode_toggler" class="fa fa-moon-o fa-2x" onclick="toggle_pageMode()"></i>
-        </a>
-
-        <div class="center">
-            <canvas id="myCanvas" width="1000" height="800">
-                Your browser does not support the canvas element.
-            </canvas>
-        </div>
+            <input style="margin: 0px 30px;" type="range" id="max_iter" value="80" min="0" max="1000" oninput="update_maxiter()">
+            
+            <a href="javascript: void(0);"><i class="fa fa-search-minus fa-2x" onclick="zoom_out()"></i></a>
         
+            <br><br>
+    
+            <a href="javascript: void(0);"><i class="fa fa-play-circle fa-2x" onclick="playAnimation()"></i></a>
+            <a href="javascript: void(0);"><i class="fa fa-pause fa-2x" style="margin: 0px 30px;" onclick="pauseAnimation()"></i></a>
+            <a href="javascript: void(0);"><i class="fa fa-refresh fa-2x" onclick="reloadAnimation()"></i></a>
+        
+
+            </div>
+                <canvas id="myCanvas" width="1000" height="800">
+                    Your browser does not support the canvas element.
+                </canvas>
+            
+        </div>
+
         <script src="script.js"></script>
 
+        <footer>
+            <p class="center">
+                by Angelo Leite (2023)
+                <a href="https://github.com/angelolmg/js-playground" target="_blank">
+                    <i style="color: gray;" class="fa fa-github"></i>
+                </a>
+            </p>
+        </footer>
     </body>
-    <footer>
-        <p class="center">
-            by Angelo Leite (2023)
-            <a href="https://github.com/angelolmg/js-playground" target="_blank">
-                <i style="color: gray;" class="fa fa-github"></i>
-            </a>
-        </p>
-    </footer>
+
 </html>
