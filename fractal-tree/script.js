@@ -13,12 +13,8 @@ class Tree {
 
   update_recursively(node) {
     if (node) {
-      if (node.left_child) {
-        this.update_recursively(node.left_child);
-      }
-      if (node.right_child) {
-        this.update_recursively(node.right_child);
-      }
+      this.update_recursively(node.left_child);
+      this.update_recursively(node.right_child);
 
       if (!node.fully_grown) {
         if (
@@ -29,11 +25,14 @@ class Tree {
         } else {
           node.fully_grown = true;
 
-          const anguloRadianos = node.alfa * (Math.PI / 180);
-          const new_x = node.x + Math.cos(anguloRadianos) * node.length;
-          const new_y = node.y - Math.sin(anguloRadianos) * node.length;
+          
 
           if (node.level < MAX_LEVEL && node.length > MIN_BRANCH_LENGTH) {
+            
+            const anguloRadianos = node.alfa * (Math.PI / 180);
+            const new_x = node.x + Math.cos(anguloRadianos) * node.length;
+            const new_y = node.y - Math.sin(anguloRadianos) * node.length;
+
             node.left_child = new TreeNode(
               new_x,
               new_y,
@@ -51,6 +50,7 @@ class Tree {
           }
         }
       }
+      
     }
   }
 
@@ -60,6 +60,9 @@ class Tree {
 
   draw_recursively(node) {
     if (node) {
+      this.draw_recursively(node.left_child);
+      this.draw_recursively(node.right_child);
+
       // Gradiente preto -> verde
       const colors = [
         "#000000",
@@ -95,9 +98,6 @@ class Tree {
       ctx.moveTo(node.x, node.y);
       ctx.lineTo(new_x, new_y);
       ctx.stroke();
-
-      this.draw_recursively(node.left_child);
-      this.draw_recursively(node.right_child);
     }
   }
 }
@@ -108,9 +108,9 @@ class TreeNode {
     this.y = y;
     this.alfa = alfa;
     this.level = level;
+    
     this.length = 0;
     this.fully_grown = false;
-
     this.left_child = null;
     this.right_child = null;
   }

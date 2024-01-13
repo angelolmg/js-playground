@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano Helper - Index</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Piano Helper</h1> <!-- Added app name here -->
+    <label for="iterations">Iterations:</label>
+    <input type="number" id="iterations" value="50"><br>
+
+    <label for="fontSize">Font Size:</label>
+    <input type="number" id="fontSize" value="45"><br>
+
+    <label for="delay">Delay (seconds):</label>
+    <input type="number" id="delay" value="5"><br>
+
+    <div class="levelButtons">
+        <button class="levelButton" onclick="startApp(1)">Level 1</button>
+        <button class="levelButton" onclick="startApp(2)">Level 2</button>
+        <button class="levelButton" onclick="startApp(3)">Level 3</button>
+        <button class="levelButton" onclick="startApp(4)">Level 4</button>
+    </div>
+</div>
+
+<script>
+    function startApp(levelType) {
+        const iterations = document.getElementById('iterations').value;
+        const fontSize = document.getElementById('fontSize').value;
+        const delay = document.getElementById('delay').value;
+
+        // Redirect to level.html with the specified values
+        window.location.href = `level.html?levelType=${levelType}&iterations=${iterations}&fontSize=${fontSize}&delay=${delay}`;
+    }
+</script>
+
+</body>
+</html>
