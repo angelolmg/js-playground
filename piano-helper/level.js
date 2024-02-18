@@ -80,7 +80,7 @@ for (let i = 1; i <= iterations && isRunning; i++) {
         
             fetchImageFileNames().then((imageFileNames) => {
                 const randomIndex = Math.floor(Math.random() * imageFileNames.length);
-                const baseUrl = "https://raw.githubusercontent.com/angelolmg/js-playground/tree/main/piano-helper/note-images"
+                const baseUrl = "https://raw.githubusercontent.com/angelolmg/js-playground/main/piano-helper/note-images"
                 content = `<img src="${baseUrl}/${randomIndex}.png">`;
             });
 
