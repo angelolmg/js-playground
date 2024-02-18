@@ -58,32 +58,12 @@ for (let i = 1; i <= iterations && isRunning; i++) {
             break;
         
         case '5':
-            async function fetchImageFileNames() {
-                const response = await fetch('note-images/');
-                const htmlText = await response.text();
+            nFiles = 34  // Number of images inside note-images 
             
-                // Create a temporary div element to hold the HTML content
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = htmlText;
-            
-                // Select all anchor elements within the temporary div
-                const anchorElements = tempDiv.querySelectorAll('#files a');
-            
-                // Extract the href attribute value from each anchor element
-                const imageFileNames = Array.from(anchorElements).map(anchor => {
-                    return anchor.getAttribute('href').split('/').pop(); // Extract file name from the URL
-                });
+            const randomIndex = Math.floor(Math.random() * nFiles);
+            const baseUrl = "https://raw.githubusercontent.com/angelolmg/js-playground/main/piano-helper/note-images"
 
-                return imageFileNames;
-            }
-        
-        
-            fetchImageFileNames().then((imageFileNames) => {
-                const randomIndex = Math.floor(Math.random() * imageFileNames.length);
-                const baseUrl = "https://raw.githubusercontent.com/angelolmg/js-playground/main/piano-helper/note-images"
-                content = `<img src="${baseUrl}/${randomIndex}.png">`;
-            });
-
+            content = `<img src="${baseUrl}/${randomIndex}.png">`
             break;
             
         default:
