@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const levelType = getQueryParameter('levelType') || '1';  // Default to Level 1
     const iterations = getQueryParameter('iterations') || 25;
     const fontSize = getQueryParameter('fontSize') || 45;
-    const delay = getQueryParameter('delay') || 5;
+    const delay = getQueryParameter('delay') || 3;
 
     async function printRandomContent() {
         isRunning = true;
@@ -56,7 +56,36 @@ for (let i = 1; i <= iterations && isRunning; i++) {
         case '4':
             content = `<p style='font-size:${fontSize}px'>${letter} - ${direction}</p>`
             break;
+        
+        case '5':
+            async function fetchImageFileNames() {
+                const response = await fetch('note-images/');
+                const htmlText = await response.text();
+            
+                // Create a temporary div element to hold the HTML content
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = htmlText;
+            
+                // Select all anchor elements within the temporary div
+                const anchorElements = tempDiv.querySelectorAll('#files a');
+            
+                // Extract the href attribute value from each anchor element
+                const imageFileNames = Array.from(anchorElements).map(anchor => {
+                    return anchor.getAttribute('href').split('/').pop(); // Extract file name from the URL
+                });
 
+                return imageFileNames;
+            }
+        
+        
+            fetchImageFileNames().then((imageFileNames) => {
+                const randomIndex = Math.floor(Math.random() * imageFileNames.length);
+                const baseUrl = "https://raw.githubusercontent.com/angelolmg/js-playground/tree/main/piano-helper/note-images"
+                content = `<img src="${baseUrl}/${randomIndex}.png">`;
+            });
+
+            break;
+            
         default:
             console.error(`Invalid levelType: ${levelType}`);
             break;
