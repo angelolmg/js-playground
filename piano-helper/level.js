@@ -60,7 +60,7 @@ for (let i = 1; i <= iterations && isRunning; i++) {
         case '5':
             nFiles = 34  // Number of images inside note-images 
             
-            const randomIndex = Math.floor(Math.random() * nFiles);
+            const randomIndex = Math.floor(Math.random() * nFiles) + 1;
             const baseUrl = "https://raw.githubusercontent.com/angelolmg/js-playground/main/piano-helper/note-images"
 
             content = `<img src="${baseUrl}/${randomIndex}.png">`
