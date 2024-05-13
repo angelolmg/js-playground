@@ -31,20 +31,11 @@ function createDiv(object) {
   div.addEventListener("click", function () {
     console.log(object);
     if (object.label === "Start") {
-    loadScene('templates/scene/scene');
+    loadScene('scene');
     }
   });
   return div;
 }
-// function toggleElements(elements, show = true) {
-//   console.log(elements);
-//   display = show ? "flex" : "none";
-//   elements.forEach(function (selector) {
-//     console.log(document.querySelector(selector));
-//     document.querySelector(selector).style.display = display;
-//   });
-// }
 
-// toggleElements([".title", ".menu"], (show = true));
 menuOptions = startMenuOptions;
 updateOptions();

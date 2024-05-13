@@ -27,6 +27,6 @@
   }
 
   .option:hover {
-    background-color: lightgrey; /* Change background color on hover */
+    background-color: lightgrey;
   }
 }
