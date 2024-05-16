@@ -13,8 +13,22 @@ body {
   width: 50%;
   height: 80vh;
   border: 2px solid gray;
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  position: absolute;
+}
+
+.foot {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: 1rem;
+  font-size: small;  
+}
+
+.foot, a {
+  color: rgba(0, 0, 0, 0.3);
 }

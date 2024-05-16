@@ -31,7 +31,7 @@ function createDiv(object) {
   div.addEventListener("click", function () {
     console.log(object);
     if (object.label === "Start") {
-    loadScene('scene');
+      loadScene("scene");
     }
   });
   return div;
