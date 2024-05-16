@@ -1,0 +1,12 @@
+[Actors]
+Anny:ann:character1.png
+Betty:bet:character1.png
+[Backgrounds]
+house:house.jpg
+[Story]
+~house
+ann<Hello betty
+bet>Hello anny
+ann<Do you like tiziu?
+bet>I sure do!
+ann<AAAAAAAAAAAAAAAAA!!!
