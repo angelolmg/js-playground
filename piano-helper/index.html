@@ -9,7 +9,7 @@
 <body>
 
 <div class="container">
-    <h1>Piano Helper</h1> <!-- Added app name here -->
+    <h1>Piano Helper</h1>
     <label for="iterations">Iterations:</label>
     <input type="number" id="iterations" value="50"><br>
 
@@ -19,12 +19,21 @@
     <label for="delay">Delay (seconds):</label>
     <input type="number" id="delay" value="3"><br>
 
+    <div class="section-title">Notes</div>
     <div class="levelButtons">
-        <button class="levelButton" onclick="startApp(1)">Level 1</button>
-        <button class="levelButton" onclick="startApp(2)">Level 2</button>
-        <button class="levelButton" onclick="startApp(3)">Level 3</button>
-        <button class="levelButton" onclick="startApp(4)">Level 4</button>
-        <button class="levelButton" onclick="startApp(5)">Level 5</button>
+        <button class="levelButton" onclick="startApp(1)">Level 1 (Hit note)</button>
+        <button class="levelButton" onclick="startApp(2)">Level 2 (+ Finger)</button>
+        <button class="levelButton" onclick="startApp(3)">Level 3 (+ Hand)</button>
+        <button class="levelButton" onclick="startApp(4)">Level 4 (+ Every key)</button>
+        <button class="levelButton" onclick="startApp(5)">Level 5 (Random note)</button>
+    </div>
+
+    <div class="section-title">Scales</div>
+    <div class="levelButtons">
+        <button class="scaleButton" onclick="startApp(6)">Level 6 (Play scale)</button>
+        <button class="scaleButton" onclick="startApp(7)">Level 7 (+ Octaves)</button>
+        <button class="scaleButton" onclick="startApp(8)">Level 8 (+ BPM)</button>
+        <button class="scaleButton" onclick="startApp(9)">Level 9 (+ Motions)</button>
     </div>
 </div>
 

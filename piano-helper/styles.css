@@ -52,7 +52,8 @@ input {
 }
 
 .levelButton,
-.backButton {
+.backButton,
+.scaleButton {
     padding: 30px; /* Slightly larger height */
     background-color: #007bff;
     color: #fff;
@@ -83,6 +84,10 @@ input {
     background-color: #0056b3;
 }
 
+.scaleButton:hover {
+    background-color: #ba9bdf;
+}
+
 .appContainer {
     text-align: center;
 }
@@ -107,4 +112,34 @@ input {
 .tracker-message {
     font-size: 14px;
     font-style: italic;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+.levelButtons {
+    margin-bottom: 20px;
+}
+.scaleButton {
+    background-color: #d8b6ff; /* Pastel Purple */
+}
+
+.bpm-dot {
+    font-size: 3rem;
+    padding-bottom: .5rem;
+}
+
+.l9p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 0;
+}
+
+@keyframes blink {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
