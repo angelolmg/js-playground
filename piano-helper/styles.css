@@ -137,6 +137,17 @@ input {
     justify-content: center;
     gap: 1rem;
     margin: 0;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+p, .bpm-div {
+    margin-top: 2rem;
+    margin-bottom: 0
+}
+
+.iterations {
+    margin-bottom: 1rem;
 }
 
 @keyframes blink {

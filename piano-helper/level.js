@@ -1,5 +1,99 @@
 document.addEventListener("DOMContentLoaded", function () {
   let isRunning = false;
+  let canvas;
+  let ctx;
+
+  const cleff = new Image();
+  const staffLines = 9;
+  const lineSpacing = 16;
+  const startX = 20;
+  const startY = 20;
+  const noteRadius = 10;
+
+  // Notes mapping (lines and spaces on the staff)
+  const notes = [
+    { name: "G", yOffset: -2.5 },
+    { name: "F", yOffset: -2 },
+    { name: "E", yOffset: -1.5 },
+    { name: "D", yOffset: -1 },
+    { name: "C", yOffset: -0.5 },
+    { name: "B", yOffset: 0 },
+    { name: "A", yOffset: 0.5 },
+    { name: "G", yOffset: 1 },
+    { name: "F", yOffset: 1.5 },
+    { name: "E", yOffset: 2 },
+    { name: "D", yOffset: 2.5 },
+  ];
+
+  // Draw staff
+  function drawStaff() {
+    ctx.lineWidth = 2;
+    for (let i = 0; i < staffLines; i++) {
+      let y = startY + i * lineSpacing;
+      ctx.beginPath();
+      ctx.moveTo(startX + (i < 2 || i > 6 ? (9 * canvas.width) / 20 : 0), y);
+      ctx.lineTo(
+        canvas.width - 20 - (i < 2 || i > 6 ? (5 * canvas.width) / 20 : 0),
+        y
+      );
+      ctx.stroke();
+    }
+  }
+
+  // Randomly choose a note
+  function getRandomNote() {
+    return notes[Math.floor(Math.random() * notes.length)];
+  }
+
+  // Randomly choose an accidental (50% none, 25% sharp, 25% flat)
+  function getRandomAccidental() {
+    const rand = Math.random();
+    if (rand < 0.5) return ""; // 50% chance for none
+    return rand < 0.75 ? "#" : "♭"; // 25% chance for sharp, 25% for flat
+  }
+
+  // Draw accidental
+  function drawAccidental(accidental, noteX, noteY) {
+    if (accidental) {
+      ctx.font = "32px bold Arial";
+      ctx.fillStyle = "black";
+      ctx.fillText(accidental, noteX - 35, noteY + 10);
+    }
+  }
+
+  // Draw a note
+  function drawNote() {
+    let note = getRandomNote();
+    let accidental = getRandomAccidental();
+    let noteY =
+      startY + (staffLines * lineSpacing) / 2 + note.yOffset * lineSpacing;
+    let noteX = (3 * canvas.width) / 5;
+
+    drawAccidental(accidental, noteX, noteY);
+
+    ctx.beginPath();
+    ctx.ellipse(noteX, noteY, noteRadius, noteRadius * 0.7, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "black";
+    ctx.fill();
+    ctx.stroke();
+
+    let selectedCleff = Math.random() < 0.5 ? "G" : "F";
+
+    cleff.onload = function () {
+      let myX = startX + 10;
+      let myY = startY - (selectedCleff === "G" ? -12 : -28);
+      ctx.drawImage(cleff, myX, myY);
+    };
+
+    cleff.src = `scale-base/${selectedCleff}cleff.png`;
+  }
+
+  // Draw everything
+  function drawRandomNote() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawStaff();
+    drawNote();
+  }
 
   // Global constants
   const letters = [
@@ -11,58 +105,21 @@ document.addEventListener("DOMContentLoaded", function () {
     "F (Fá)",
     "G (Sol)",
   ];
-  const directions = ["Right Hand", "Left Hand", "Both Hands"];
-  const majorScales = [
-    "C",
-    "C#",
-    "D",
-    "D#",
-    "E",
-    "F",
-    "F#",
-    "G",
-    "G#",
-    "A",
-    "A#",
-    "B",
-  ];
-  const minorScales = [
-    "Cm",
-    "C#m",
-    "Dm",
-    "D#m",
-    "Em",
-    "Fm",
-    "F#m",
-    "Gm",
-    "G#m",
-    "Am",
-    "A#m",
-    "Bm",
-  ];
-  const harmonicMinorScales = [
-    "Cm (h)",
-    "C#m (h)",
-    "Dm (h)",
-    "D#m (h)",
-    "Em (h)",
-    "Fm (h)",
-    "F#m (h)",
-    "Gm (h)",
-    "G#m (h)",
-    "Am (h)",
-    "A#m (h)",
-    "Bm (h)",
-  ];
-  const motions = ["Same motion", "Contrary motion"]; // Added for scale levels
-  const octaves = [1, 2, 3];
-  const bpms = [80, 100, 120];
+
   let currBPM;
+  const directions = ["Right Hand", "Left Hand", "Both Hands"];
+  const motions = ["Same motion", "Contrary motion"];
+  const octaves = [1, 2, 3];
+  const bpms = [
+    { speed: "Andante", bpm: 80 },
+    { speed: "Moderato", bpm: 108 },
+    { speed: "Allegro", bpm: 126 },
+  ];
 
   const levelType = getQueryParameter("levelType", "1"); // Default to Level 1
-  const iterations = getQueryParameter("iterations", 25);
-  const fontSize = getQueryParameter("fontSize", 45);
-  const delay = getQueryParameter("delay", 3);
+  const iterations = getQueryParameter("iterations", 5);
+  const fontSize = getQueryParameter("fontSize", 35);
+  const delay = getQueryParameter("delay", 30);
 
   // Helper functions
   function sleep(ms) {
@@ -86,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateBpmDot(bpm) {
     if (bpm) {
       document.querySelector(".bpm-dot").style.animation = `blink ${
-        30 / bpm
+        30 / bpm.bpm
       }s infinite alternate`;
     }
   }
@@ -95,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
     for (let count = 3; count > 0; count--) {
       document.getElementById(
         "appContainer"
-      ).innerHTML = `<p style='font-size:24px;color:red'>Starting in: ${count}</p>`;
+      ).innerHTML = `<p style='font-size:24px;color:red' class="iterations">Starting in: ${count}</p>`;
       await sleep(1000);
     }
   }
@@ -114,25 +171,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
       case "2":
         content = `<p style='font-size:${fontSize}px'><strong>Hit: </strong>${letter}</p>
-        <p style='font-size:${fontSize}px'><strong>Use: </strong>Finger ${randomNumber}</p>`;
+                    <p style='font-size:${fontSize}px'><strong>Use: </strong>Finger ${randomNumber}</p>`;
         break;
 
       case "3":
         content = `<p style='font-size:${fontSize}px'><strong>Hit: </strong>${letter}</p>
-                            <p style='font-size:${fontSize}px'><strong>Use: </strong>${direction} - Finger ${randomNumber}</p>`;
+                    <p style='font-size:${fontSize}px'><strong>Use: </strong>${direction} - Finger ${randomNumber}</p>`;
         break;
 
       case "4":
         content = `<p style='font-size:${fontSize}px'><strong>Hit every: </strong>${letter}</p>
-                            <p style='font-size:${fontSize}px'><strong>Use: </strong>${direction} - Finger ${randomNumber}</p>`;
+                    <p style='font-size:${fontSize}px'><strong>Use: </strong>${direction} - Finger ${randomNumber}</p>`;
         break;
 
       case "5":
-        const nFiles = 34; // Number of images inside note-images
-        const randomIndex = Math.floor(Math.random() * nFiles) + 1;
-        const baseUrl =
-          "https://raw.githubusercontent.com/angelolmg/js-playground/main/piano-helper/note-images";
-        content = `<img src="${baseUrl}/${randomIndex}.png">`;
+        content = `<canvas id="musicCanvas" width="250" height="170"></canvas>`;
         break;
 
       default:
@@ -145,70 +198,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // LEVEL 6-9: Generate Scales
   function generateScalesLevel(levelType) {
-    // 50/50 chance for major or minor
-    const isMajor = Math.random() < 0.5;
-
-    let scale;
-    if (isMajor) {
-      scale = majorScales[Math.floor(Math.random() * majorScales.length)];
-    } else {
-      // 50/50 chance for natural or harmonic minor
-      const isHarmonicMinor = Math.random() < 0.5;
-      if (isHarmonicMinor) {
-        scale =
-          harmonicMinorScales[
-            Math.floor(Math.random() * harmonicMinorScales.length)
-          ];
-      } else {
-        scale = minorScales[Math.floor(Math.random() * minorScales.length)];
-      }
-    }
-
     const direction = directions[Math.floor(Math.random() * directions.length)];
+    const octave = octaves[Math.floor(Math.random() * octaves.length)];
+    const bpm = bpms[Math.floor(Math.random() * bpms.length)];
+    const motion = motions[Math.floor(Math.random() * motions.length)];
 
     if (levelType === "6") {
       return `
                 <div>
-                    <p style='font-size:${fontSize}px'><strong>Play: </strong>${scale}</p>
+                    <canvas id="musicCanvas" width="250" height="170"></canvas>
                     <p style='font-size:${fontSize}px'><strong>Use: </strong>${direction}</p>
                 </div>
             `;
     } else if (levelType === "7") {
-        const octave = octaves[Math.floor(Math.random() * octaves.length)];
       return `
                 <div>
-                    <p style='font-size:${fontSize}px'><strong>Play: </strong>${scale} - ${octave} octaves</p>
+                    <canvas id="musicCanvas" width="250" height="170"></canvas>
+                    <p style='font-size:${fontSize}px'><strong>Play: </strong>${octave} octaves</p>
                     <p style='font-size:${fontSize}px'><strong>Use: </strong>${direction}</p>
                 </div>
             `;
-      
     } else if (levelType === "8") {
-        const bpm = bpms[Math.floor(Math.random() * bpms.length)];
-        currBPM = bpm;
-        const octave = octaves[Math.floor(Math.random() * octaves.length)];
-        return `
+      currBPM = bpm;
+      return `
                   <div>
-                      <p style='font-size:${fontSize}px'><strong>Play: </strong>${scale} - ${octave} octaves</p>
+                      <canvas id="musicCanvas" width="250" height="170"></canvas>
+                      <p style='font-size:${fontSize}px'><strong>Play: </strong>${octave} octaves</p>
                       <p style='font-size:${fontSize}px'><strong>Use: </strong>${direction}</p>
-                      <p style='font-size:${fontSize}px' class="l9p"><strong>BPM: </strong>${bpm}<span class="bpm-dot">●</span></p>
+
+                      <p style='font-size:${fontSize}px' class="l9p">
+                        <strong>BPM: </strong>${bpm.bpm} (${bpm.speed})
+                        <span class="bpm-dot">●</span>
+                      </p>
                   </div>
               `;
-        
     } else if (levelType === "9") {
-        const bpm = bpms[Math.floor(Math.random() * bpms.length)];
-        currBPM = bpm;
-        const octave = octaves[Math.floor(Math.random() * octaves.length)];
-        const motion = motions[Math.floor(Math.random() * motions.length)];
-        return `
+      currBPM = bpm;
+      return `
                   <div>
-                  
-                  <p style='font-size:${fontSize}px'><strong>Play: </strong>${scale} - ${octave} octaves</p>
-                  <p style='font-size:${fontSize}px'><strong>Use: </strong> Both hands</p>
-                      <p style='font-size:${fontSize}px' class="l9p"><strong>BPM: </strong> ${bpm} <span class="bpm-dot">●</span></p>
+                      <canvas id="musicCanvas" width="250" height="170"></canvas>
+                      <p style='font-size:${fontSize}px'><strong>Play: </strong>${octave} octaves</p>
+                      <p style='font-size:${fontSize}px'><strong>Use: </strong> Both hands</p>
+                      <p style='font-size:${fontSize}px' class="l9p">
+                        <strong>BPM: </strong>${bpm.bpm} (${bpm.speed})
+                        <span class="bpm-dot">●</span>
+                      </p>
                       <p style='font-size:${fontSize}px'><strong>At: </strong>${motion}</p>
                   </div>
               `;
-        
     }
   }
 
@@ -233,10 +270,16 @@ document.addEventListener("DOMContentLoaded", function () {
         content = generateScalesLevel(levelType);
       }
 
-      const trackerMessage = `<p style='font-size:14px'>(${i}/${iterations})</p>`;
+      const trackerMessage = `<p style='font-size:14px' class="iterations" >(${i}/${iterations})</p>`;
       document.getElementById("appContainer").innerHTML =
         content + trackerMessage;
       updateBpmDot(currBPM);
+      canvas = document.getElementById("musicCanvas");
+      if (canvas) {
+        ctx = canvas.getContext("2d");
+        drawRandomNote();
+      }
+
       await sleep(delay * 1000);
     }
 
@@ -245,6 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "<p class='welcome-message'>Session is over. <br> Good job!</p>";
     hideBackButton();
     isRunning = false;
+    await sleep(2000);
     // Redirect to index.html when the app is finished
     window.location.href = "index.html";
   }
